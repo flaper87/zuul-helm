@@ -20,6 +20,7 @@ web:
   enabled: true
   replicas: 3
   port: 9000
+  serviceType: ClusterIP
 
 ingress:
   enabled: false
