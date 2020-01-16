@@ -5,6 +5,7 @@ zookeeper:
 executor:
   enabled: true
   replicas: 3
+  diskLimitPerJob: 250
 
 merger:
   enabled: true
