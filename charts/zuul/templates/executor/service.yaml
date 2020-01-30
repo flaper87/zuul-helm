@@ -9,6 +9,7 @@ metadata:
 {{- include "zuul.executor.labels" . | indent 4 }}
 spec:
   type: ClusterIP
+  clusterIP: None
   ports:
   - name: logs
     port: 7900
