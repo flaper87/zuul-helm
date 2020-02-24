@@ -23,9 +23,6 @@ spec:
       containers:
       - name: executor
         image: zuul/zuul-executor:latest
-        args:
-        - /usr/local/bin/zuul-executor
-        - -d
         ports:
         - name: logs
           containerPort: 7900

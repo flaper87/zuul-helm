@@ -22,9 +22,6 @@ spec:
       containers:
       - name: merger
         image: zuul/zuul-merger:latest
-        args:
-        - /usr/local/bin/zuul-merger
-        - -d
         volumeMounts:
         - name: zuul-config
           mountPath: /etc/zuul

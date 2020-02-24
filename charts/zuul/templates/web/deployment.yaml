@@ -22,9 +22,6 @@ spec:
       containers:
       - name: web
         image: zuul/zuul-web:latest
-        args:
-        - /usr/local/bin/zuul-web
-        - -d
         ports:
         - name: zuul-web
           containerPort: {{ .Values.web.port }}
