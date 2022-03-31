@@ -15,4 +15,5 @@
     gate:
       jobs:
         - chart-testing-lint
-        - zuul-helm-functional
+        - zuul-helm-functional:
+            voting: false
