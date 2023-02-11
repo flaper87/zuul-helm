@@ -2,6 +2,9 @@
 zookeeper:
   hosts: zookeeper
 
+database:
+  uri: mysql+pymysql://user@localhost/zuul
+
 executor:
   enabled: true
   replicas: 3
