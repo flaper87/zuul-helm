@@ -1,5 +1,6 @@
----
+{{- $root := . -}}
 {{ if .Values.executor.enabled }}
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -26,16 +27,48 @@ spec:
         ports:
         - name: logs
           containerPort: 7900
+        securityContext:
+          privileged: true
         volumeMounts:
         - name: zuul-config
           mountPath: /etc/zuul
-        securityContext:
-          privileged: true
+        {{- range $secret, $secret_values := $root.Values.secrets -}}
+        {{- if $secret_values.mount }}
+        - name: {{ $secret }}
+          {{- $secret_values.mount | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- range $secret, $secret_values := $root.Values.executor.secrets -}}
+        {{- if $secret_values.mount }}
+        - name: {{ $secret }}
+          {{- $secret_values.mount | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
       volumes:
       - name: zuul-config
         secret:
           secretName: {{ include "zuul.fullname" . }}
           defaultMode: 256
+      {{- range $secret, $secret_values := $root.Values.secrets -}}
+      {{- if $secret_values.mount }}
+      - name: {{ $secret }}
+        secret:
+          secretName: {{ $secret }}
+          {{- if $secret_values.volume }}
+          {{- $secret_values.volume | toYaml | nindent 10 }}
+          {{- end -}}
+      {{- end -}}
+      {{- end -}}
+      {{- range $secret, $secret_values := $root.Values.executor.secrets -}}
+      {{- if $secret_values.mount }}
+      - name: {{ $secret }}
+        secret:
+          secretName: {{ $secret }}
+          {{- if $secret_values.volume }}
+          {{- $secret_values.volume | toYaml | nindent 10 }}
+          {{- end -}}
+      {{- end -}}
+      {{- end -}}
     {{- with .Values.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}

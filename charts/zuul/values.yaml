@@ -1,6 +1,12 @@
 ---
 zookeeper:
   hosts: zookeeper
+  # Path to dir containing zookeeper's certs
+  # This dir should contain the following 3 files:
+  # - tls.crt
+  # - tls.key
+  # - ca.crt
+  # certs_path: /etc/zookeeper/certs
 
 database:
   uri: mysql+pymysql://user@localhost/zuul
@@ -10,9 +16,15 @@ executor:
   replicas: 3
   diskLimitPerJob: 250
 
+  # Refer to top-level secrets docs
+  secrets: {}
+
 merger:
   enabled: true
   replicas: 3
+
+  # Refer to top-level secrets docs
+  secrets: {}
 
 scheduler:
   enabled: true
@@ -20,14 +32,40 @@ scheduler:
     port: 4730
   tenantConfigPath: /etc/zuul/main.yaml
 
+  # Refer to top-level secrets docs
+  secrets: {}
+
 web:
   enabled: true
   replicas: 3
   port: 9000
   serviceType: ClusterIP
 
+  # Refer to top-level secrets docs
+  secrets: {}
+
 ingress:
   enabled: false
 
 tenantConfig: {}
 extraFiles: {}
+
+
+# The `secrets` value defines any secrets that live in Vault which should be
+# fetched and stored in Kubernetes as native `Secret` objects using
+# kube-vault-controller.
+secrets: {}
+# An example entry follows:
+#   # The name is just an identifier for the chart.
+#   zookeeper-tls:
+#     # `mount` indicates that the secret should be mounted into the workload at
+#     # an indicated path. The values underneath this yaml key will be
+#     # interpolated into the associated `volumeMount` for the workload.
+#     mount:
+#       mountPath: /my/secret/path
+#     # `volume` permits you to control arbitrary `volume` values for this
+#     # secret volume, such as when controlling key projection.
+#     volume:
+#       items:
+#       - key: my_key_in_vault
+#         path: new_file_name

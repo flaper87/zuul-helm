@@ -1,5 +1,6 @@
----
+{{- $root := . -}}
 {{ if .Values.web.enabled }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,11 +29,43 @@ spec:
         volumeMounts:
         - name: zuul-config
           mountPath: /etc/zuul
+        {{- range $secret, $secret_values := $root.Values.secrets -}}
+        {{- if $secret_values.mount }}
+        - name: {{ $secret }}
+          {{- $secret_values.mount | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- range $secret, $secret_values := $root.Values.merger.secrets -}}
+        {{- if $secret_values.mount }}
+        - name: {{ $secret }}
+          {{- $secret_values.mount | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
       volumes:
       - name: zuul-config
         secret:
           secretName: {{ include "zuul.fullname" . }}
           defaultMode: 256
+      {{- range $secret, $secret_values := $root.Values.secrets -}}
+      {{- if $secret_values.mount }}
+      - name: {{ $secret }}
+        secret:
+          secretName: {{ $secret }}
+          {{- if $secret_values.volume }}
+          {{- $secret_values.volume | toYaml | nindent 10 }}
+          {{- end -}}
+      {{- end -}}
+      {{- end -}}
+      {{- range $secret, $secret_values := $root.Values.merger.secrets -}}
+      {{- if $secret_values.mount }}
+      - name: {{ $secret }}
+        secret:
+          secretName: {{ $secret }}
+          {{- if $secret_values.volume }}
+          {{- $secret_values.volume | toYaml | nindent 10 }}
+          {{- end -}}
+      {{- end -}}
+      {{- end -}}
     {{- with .Values.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}

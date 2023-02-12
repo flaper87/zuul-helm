@@ -1,5 +1,6 @@
----
+{{- $root := . -}}
 {{ if .Values.scheduler.enabled }}
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -35,6 +36,18 @@ spec:
         - name: zuul-tenant-config
           mountPath: /etc/zuul/tenant
 {{- end }}
+        {{- range $secret, $secret_values := $root.Values.secrets -}}
+        {{- if $secret_values.mount }}
+        - name: {{ $secret }}
+          {{- $secret_values.mount | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- range $secret, $secret_values := $root.Values.scheduler.secrets -}}
+        {{- if $secret_values.mount }}
+        - name: {{ $secret }}
+          {{- $secret_values.mount | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
       volumes:
       - name: zuul-config
         secret:
@@ -45,6 +58,30 @@ spec:
         secret:
           secretName: {{ .Values.scheduler.tenantConfigSecret }}
 {{- end }}
+      {{- range $vol, $vol_values := $root.Values.volumes }}
+      - name: {{ $vol }}
+        {{- required "Volume source info is required" $vol_values.source | toYaml | nindent 8 }}
+      {{- end }}
+      {{- range $secret, $secret_values := $root.Values.secrets -}}
+      {{- if $secret_values.mount }}
+      - name: {{ $secret }}
+        secret:
+          secretName: {{ $secret }}
+          {{- if $secret_values.volume }}
+          {{- $secret_values.volume | toYaml | nindent 10 }}
+          {{- end -}}
+      {{- end -}}
+      {{- end -}}
+      {{- range $secret, $secret_values := $root.Values.scheduler.secrets -}}
+      {{- if $secret_values.mount }}
+      - name: {{ $secret }}
+        secret:
+          secretName: {{ $secret }}
+          {{- if $secret_values.volume }}
+          {{- $secret_values.volume | toYaml | nindent 10 }}
+          {{- end -}}
+      {{- end -}}
+      {{- end -}}
     {{- with .Values.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}
