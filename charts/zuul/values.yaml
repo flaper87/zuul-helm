@@ -51,7 +51,7 @@ web:
 ingress:
   enabled: false
 
-tenantConfig: {}
+tenantConfig: []
 extraFiles: {}
 
 
