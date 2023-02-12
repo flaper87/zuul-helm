@@ -8,6 +8,10 @@ zookeeper:
   # - ca.crt
   # certs_path: /etc/zookeeper/certs
 
+
+keystore:
+  password: "secret-password"
+
 database:
   uri: mysql+pymysql://user@localhost/zuul
 
