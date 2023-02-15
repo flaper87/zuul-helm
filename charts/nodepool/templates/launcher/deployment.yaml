@@ -1,5 +1,6 @@
----
+{{- $root := . -}}
 {{ if .Values.launcher.enabled }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,10 +29,42 @@ spec:
         volumeMounts:
         - name: nodepool-config
           mountPath: /etc/nodepool
+        {{- range $secret, $secret_values := $root.Values.secrets -}}
+        {{- if $secret_values.mount }}
+        - name: {{ $secret }}
+          {{- $secret_values.mount | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- range $secret, $secret_values := $root.Values.launcher.secrets -}}
+        {{- if $secret_values.mount }}
+        - name: {{ $secret }}
+          {{- $secret_values.mount | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
       volumes:
       - name: nodepool-config
         secret:
           secretName: {{ (empty .Values.config.secret) | ternary (include "nodepool.fullname" .) .Values.config.secret  }}
+      {{- range $secret, $secret_values := $root.Values.secrets -}}
+      {{- if $secret_values.mount }}
+      - name: {{ $secret }}
+        secret:
+          secretName: {{ $secret }}
+          {{- if $secret_values.volume }}
+          {{- $secret_values.volume | toYaml | nindent 10 }}
+          {{- end -}}
+      {{- end -}}
+      {{- end -}}
+      {{- range $secret, $secret_values := $root.Values.launcher.secrets -}}
+      {{- if $secret_values.mount }}
+      - name: {{ $secret }}
+        secret:
+          secretName: {{ $secret }}
+          {{- if $secret_values.volume }}
+          {{- $secret_values.volume | toYaml | nindent 10 }}
+          {{- end -}}
+      {{- end -}}
+      {{- end -}}
     {{- with .Values.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}

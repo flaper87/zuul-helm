@@ -3,9 +3,15 @@ builder:
   enabled: true
   replicas: 1
 
+  # Refer to top-level secrets docs
+  secrets: {}
+
 launcher:
   enabled: true
   replicas: 1
+
+  # Refer to top-level secrets docs
+  secrets: {}
 
 clouds: ''
 
@@ -14,3 +20,22 @@ config:
     port: 8005
     listen_address: 0.0.0.0
   images-dir: /opt/nodepool
+
+# The `secrets` value defines any secrets that live in Vault which should be
+# fetched and stored in Kubernetes as native `Secret` objects using
+# kube-vault-controller.
+secrets: {}
+# An example entry follows:
+#   # The name is just an identifier for the chart.
+#   zookeeper-tls:
+#     # `mount` indicates that the secret should be mounted into the workload at
+#     # an indicated path. The values underneath this yaml key will be
+#     # interpolated into the associated `volumeMount` for the workload.
+#     mount:
+#       mountPath: /my/secret/path
+#     # `volume` permits you to control arbitrary `volume` values for this
+#     # secret volume, such as when controlling key projection.
+#     volume:
+#       items:
+#       - key: my_key_in_vault
+#         path: new_file_name

@@ -1,5 +1,6 @@
----
+{{- $root := . -}}
 {{ if .Values.builder.enabled }}
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -26,6 +27,8 @@ spec:
         env:
         - name: OS_CLIENT_CONFIG_FILE
           value: /etc/nodepool/clouds.yaml
+        securityContext:
+          privileged: true
         volumeMounts:
         - name: nodepool-config
           mountPath: /etc/nodepool
@@ -35,8 +38,18 @@ spec:
           mountPath: {{ index .Values.config "images-dir" }}
         - name: dev
           mountPath: /dev
-        securityContext:
-          privileged: true
+        {{- range $secret, $secret_values := $root.Values.secrets -}}
+        {{- if $secret_values.mount }}
+        - name: {{ $secret }}
+          {{- $secret_values.mount | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- range $secret, $secret_values := $root.Values.builder.secrets -}}
+        {{- if $secret_values.mount }}
+        - name: {{ $secret }}
+          {{- $secret_values.mount | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
       volumes:
       - name: nodepool-config
         secret:
@@ -46,6 +59,26 @@ spec:
       - name: dev
         hostPath:
           path: /dev
+      {{- range $secret, $secret_values := $root.Values.secrets -}}
+      {{- if $secret_values.mount }}
+      - name: {{ $secret }}
+        secret:
+          secretName: {{ $secret }}
+          {{- if $secret_values.volume }}
+          {{- $secret_values.volume | toYaml | nindent 10 }}
+          {{- end -}}
+      {{- end -}}
+      {{- end -}}
+      {{- range $secret, $secret_values := $root.Values.builder.secrets -}}
+      {{- if $secret_values.mount }}
+      - name: {{ $secret }}
+        secret:
+          secretName: {{ $secret }}
+          {{- if $secret_values.volume }}
+          {{- $secret_values.volume | toYaml | nindent 10 }}
+          {{- end -}}
+      {{- end -}}
+      {{- end -}}
     {{- with .Values.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}
