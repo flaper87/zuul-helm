@@ -48,8 +48,11 @@ web:
   # Refer to top-level secrets docs
   secrets: {}
 
-ingress:
-  enabled: false
+  ingress:
+    enabled: false
+    host: ""
+    labels: {}
+    annotations: {}
 
 tenantConfig: []
 extraFiles: {}
