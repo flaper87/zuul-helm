@@ -54,6 +54,12 @@ web:
     labels: {}
     annotations: {}
 
+  connections:
+    enabled: false
+    host: ""
+    labels: {}
+    annotations: {}
+
 tenantConfig: []
 extraFiles: {}
 
