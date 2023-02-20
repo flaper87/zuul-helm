@@ -50,6 +50,8 @@ spec:
           {{- $secret_values.mount | toYaml | nindent 10 }}
         {{- end }}
         {{- end }}
+      serviceAccount: nodepool
+      serviceAccountName: nodepool
       volumes:
       - name: nodepool-config
         secret:
