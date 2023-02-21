@@ -60,6 +60,10 @@ web:
     labels: {}
     annotations: {}
 
+
+connections: {}
+authenticators: {}
+
 tenantConfig: []
 extraFiles: {}
 
