@@ -48,7 +48,6 @@ spec:
       - name: zuul-config
         secret:
           secretName: {{ include "zuul.fullname" . }}
-          defaultMode: 256
       {{- range $secret, $secret_values := $root.Values.secrets -}}
       {{- if $secret_values.mount }}
       - name: {{ $secret }}
