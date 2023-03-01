@@ -21,6 +21,10 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       containers:
+      {{- range $cont_name, $cont := $root.Values.web.sidecar }}
+      - name: {{$cont_name}}
+        {{- $cont | toYaml | nindent 8 }}
+      {{- end }}
       - name: web
         image: zuul/zuul-web:latest
         ports:

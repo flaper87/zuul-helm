@@ -60,6 +60,16 @@ web:
     labels: {}
     annotations: {}
 
+  sidecar: {}
+  #  gcs-proxy:
+  #    image: docker.io/flaper87/gcsproxy:latest
+  #    ports:
+  #      - name: gcs-proxy
+  #        containerPort: 8080
+  #    volumeMounts:
+  #      - name: gcs-secret
+  #        mountPath: ""
+
 
 connections: {}
 authenticators: {}
