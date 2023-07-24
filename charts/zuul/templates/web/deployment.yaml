@@ -26,7 +26,7 @@ spec:
         {{- $cont | toYaml | nindent 8 }}
       {{- end }}
       - name: web
-        image: zuul/zuul-web:latest
+        image: {{ $root.Values.web.image | default "quay.io/zuul-ci/zuul-web:latest" }}
         ports:
         - name: zuul-web
           containerPort: {{ .Values.web.port }}
