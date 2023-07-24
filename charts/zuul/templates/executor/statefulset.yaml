@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: executor
-        image: zuul/zuul-executor:latest
+        image: {{ $root.Values.executor.image | default "quay.io/zuul-ci/zuul-executor:latest" }}
         ports:
         - name: logs
           containerPort: 7900

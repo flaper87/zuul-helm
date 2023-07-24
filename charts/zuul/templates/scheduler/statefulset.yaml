@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: launcher
-        image: zuul/zuul-scheduler:latest
+        image: {{ $root.Values.scheduler.image | default "quay.io/zuul-ci/zuul-scheduler:latest" }}
         ports:
         - name: gearman
           containerPort: {{ .Values.scheduler.gearman.port }}

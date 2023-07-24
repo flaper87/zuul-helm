@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: builder
-        image: zuul/nodepool-builder:latest
+        image: {{ $root.Values.builder.image | default "quay.io/zuul-ci/nodepool-builder:latest" }}
         env:
         - name: OS_CLIENT_CONFIG_FILE
           value: /etc/nodepool/clouds.yaml

@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: merger
-        image: zuul/zuul-merger:latest
+        image: {{ $root.Values.merger.image | default "quay.io/zuul-ci/zuul-merger:latest" }}
         volumeMounts:
         - name: zuul-config
           mountPath: /etc/zuul
