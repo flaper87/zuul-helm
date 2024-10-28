@@ -49,3 +49,25 @@ Generate Nodepool-launcher labels
 app.kubernetes.io/component: nodepool-launcher
 {{- end }}
 
+
+{{/*
+Generate basic annotations
+*/}}
+{{- define "nodepool.common.annotations" }}
+reloader.stakater.com/auto: "true"
+{{- end }}
+
+{{/*
+Generate Nodepool-builder annotations
+*/}}
+{{- define "nodepool.builder.annotations" }}
+{{- include "nodepool.common.annotations" . }}
+{{- end }}
+
+{{/*
+Generate Nodepool-launcher annotations
+*/}}
+{{- define "nodepool.launcher.annotations" }}
+{{- include "nodepool.common.annotations" . }}
+{{- end }}
+

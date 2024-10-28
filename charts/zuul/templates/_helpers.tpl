@@ -64,3 +64,38 @@ Generate Zuul-web labels
 {{- include "zuul.common.labels" . }}
 app.kubernetes.io/component: zuul-web
 {{- end }}
+
+{{/*
+Generate basic annotations
+*/}}
+{{- define "zuul.common.annotations" }}
+reloader.stakater.com/auto: "true"
+{{- end }}
+
+{{/*
+Generate Zuul-executor annotations
+*/}}
+{{- define "zuul.executor.annotations" }}
+{{- include "zuul.common.annotations" . }}
+{{- end }}
+
+{{/*
+Generate Zuul-merger annotations
+*/}}
+{{- define "zuul.merger.annotations" }}
+{{- include "zuul.common.annotations" . }}
+{{- end }}
+
+{{/*
+Generate Zuul-scheduler annotations
+*/}}
+{{- define "zuul.scheduler.annotations" }}
+{{- include "zuul.common.annotations" . }}
+{{- end }}
+
+{{/*
+Generate Zuul-web annotations
+*/}}
+{{- define "zuul.web.annotations" }}
+{{- include "zuul.common.annotations" . }}
+{{- end }}
