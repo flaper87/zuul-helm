@@ -8,6 +8,8 @@ metadata:
   name: {{ include "nodepool.fullname" . }}-builder
   labels:
 {{- include "nodepool.builder.labels" . | indent 4 }}
+  annotations:
+{{- include "nodepool.builder.annotations" . | indent 4 }}
 spec:
   replicas: {{ .Values.builder.replicas }}
   serviceName: nodepool-builder
@@ -20,6 +22,7 @@ spec:
 {{- include "nodepool.builder.labels" . | indent 8 }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+{{- include "nodepool.builder.annotations" . | indent 8 }}
     spec:
       containers:
       - name: builder

@@ -8,6 +8,8 @@ metadata:
   name: {{ include "zuul.fullname" . }}-executor
   labels:
 {{- include "zuul.executor.labels" . | indent 4 }}
+  annotations:
+{{- include "zuul.executor.annotations" . | indent 4 }}
 spec:
   serviceName: {{ include "zuul.fullname" . }}-executor
   replicas: {{ .Values.executor.replicas }}
@@ -20,6 +22,7 @@ spec:
 {{- include "zuul.executor.labels" . | indent 8 }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+{{- include "zuul.executor.annotations" . | indent 8 }}
     spec:
       containers:
       - name: executor

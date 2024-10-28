@@ -8,6 +8,8 @@ metadata:
   name: {{ include "zuul.fullname" . }}-merger
   labels:
 {{- include "zuul.merger.labels" . | indent 4 }}
+  annotations:
+{{- include "zuul.merger.annotations" . | indent 4 }}
 spec:
   replicas: {{ .Values.merger.replicas }}
   selector:
@@ -19,6 +21,7 @@ spec:
 {{- include "zuul.merger.labels" . | indent 8 }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+{{- include "zuul.merger.annotations" . | indent 8 }}
     spec:
       containers:
       - name: merger

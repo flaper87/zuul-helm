@@ -8,6 +8,8 @@ metadata:
   name: {{ include "zuul.fullname" . }}-scheduler
   labels:
 {{- include "zuul.scheduler.labels" . | indent 4 }}
+  annotations:
+{{- include "zuul.scheduler.annotations" . | indent 4 }}
 spec:
   replicas: 1
   serviceName: zuul-scheduler
@@ -20,6 +22,7 @@ spec:
 {{- include "zuul.scheduler.labels" . | indent 8 }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+{{- include "zuul.scheduler.annotations" . | indent 8 }}
     spec:
       containers:
       - name: launcher

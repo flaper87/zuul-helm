@@ -8,6 +8,8 @@ metadata:
   name: {{ include "zuul.fullname" . }}-web
   labels:
 {{- include "zuul.web.labels" . | indent 4 }}
+  annotations:
+{{- include "zuul.web.annotations" . | indent 4 }}
 spec:
   replicas: {{ .Values.web.replicas }}
   selector:
@@ -19,6 +21,7 @@ spec:
 {{- include "zuul.web.labels" . | indent 8 }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+{{- include "zuul.web.annotations" . | indent 8 }}
     spec:
       containers:
       {{- range $cont_name, $cont := $root.Values.web.sidecar }}

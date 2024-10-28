@@ -8,6 +8,8 @@ metadata:
   name: {{ include "nodepool.fullname" . }}-launcher
   labels:
 {{- include "nodepool.launcher.labels" . | indent 4 }}
+  annotations:
+{{- include "nodepool.launcer.annotations" . | indent 4 }}
 spec:
   replicas: {{ .Values.launcher.replicas }}
   selector:
@@ -19,6 +21,7 @@ spec:
 {{- include "nodepool.launcher.labels" . | indent 8 }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+{{- include "nodepool.launcer.annotations" . | indent 8 }}
     spec:
       containers:
       - name: launcher
