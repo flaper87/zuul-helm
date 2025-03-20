@@ -24,36 +24,6 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
 {{- include "zuul.scheduler.annotations" . | indent 8 }}
     spec:
-      initContainers:
-      - name: smart-reconfigure 
-        image: {{ $root.Values.scheduler.image | default "quay.io/zuul-ci/zuul-scheduler:latest" }}
-        command: /usr/local/bin/zuul-scheduler
-        args:
-          - smart-reconfigure
-        ports:
-        - name: gearman
-          containerPort: {{ .Values.scheduler.gearman.port }}
-        volumeMounts:
-        - name: zuul-config
-          mountPath: /etc/zuul
-        - name: {{ include "zuul.fullname" . }}-scheduler
-          mountPath: /var/lib/zuul
-{{- if .Values.scheduler.tenantConfigSecret }}
-        - name: zuul-tenant-config
-          mountPath: /etc/zuul/tenant
-{{- end }}
-        {{- range $secret, $secret_values := $root.Values.secrets -}}
-        {{- if $secret_values.mount }}
-        - name: {{ $secret }}
-          {{- $secret_values.mount | toYaml | nindent 10 }}
-        {{- end }}
-        {{- end }}
-        {{- range $secret, $secret_values := $root.Values.scheduler.secrets -}}
-        {{- if $secret_values.mount }}
-        - name: {{ $secret }}
-          {{- $secret_values.mount | toYaml | nindent 10 }}
-        {{- end }}
-        {{- end }}
       containers:
       - name: launcher
         image: {{ $root.Values.scheduler.image | default "quay.io/zuul-ci/zuul-scheduler:latest" }}
